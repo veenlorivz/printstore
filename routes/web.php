@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,8 @@ Route::prefix("/dashboard")->group(function () {
     Route::redirect("/", "/dashboard/products");
     Route::get("/products", [DashboardController::class, "products"])->name("dashboard.products");
     Route::get("/orders", [DashboardController::class, "orders"])->name("dashboard.orders");
+    Route::put("/orders/approve/{id}", [OrderController::class, "approve"])->name('orders.approve');
+    Route::delete("/orders/delete/{id}", [OrderController::class, "destroy"])->name('orders.delete');
     Route::get("/customers", [DashboardController::class, "customers"])->name("dashboard.customers");
 })->middleware("role");
 
