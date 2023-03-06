@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -15,7 +18,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Order::with(['product'])->where('user_id', Auth::user()->id)->latest()->get();
+        return view('user.order', compact('orders'));
     }
 
     /**
@@ -36,7 +40,19 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $product = Product::find($request->product_id);
+        $order = $request->validate([
+            "user_id" => "required|integer",
+            "product_id" => "required|integer",
+            "quantity" => "required|integer",
+        ]);
+
+        $order['total'] = $request->quantity * $product->price;
+
+        Order::create($order);
+        Cart::destroy($request->cart_id);
+
+        return redirect()->route('orders.index')->with('success', "Product has been successfully ordered");
     }
 
     /**
@@ -92,7 +108,20 @@ class OrderController extends Controller
      */
     public function approve($id){
         $order = Order::find($id);
-        $order->is_approved = true;
+        $order->status = 'approved';
+        $order->save();
+
+        return redirect('/dashboard/orders');
+    }
+
+    /**
+     * Reject the order.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function reject($id){
+        $order = Order::find($id);
+        $order->status = 'rejected';
         $order->save();
 
         return redirect('/dashboard/orders');

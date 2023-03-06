@@ -19,20 +19,26 @@ class ProductSeeder extends Seeder
 
         $products = [
             [
-                "name" => "HP Pavilon 15",
-                "desc" => "This printer can print",
+                "name" => "HP OfficeJet Pro 9015e All-in-One Printer",
+                "spec" => "This printer can print",
                 "price" => 500000,
                 "stock" => 5,
             ],
             [
                 "name" => "Epson L3210",
-                "desc" => "This printer can print",
+                "spec" => "This printer can print",
                 "price" => 400000,
                 "stock" => 3,
             ],
             [
                 "name" => "Canon PIXMA",
-                "desc" => "This printer can print",
+                "spec" => "This printer can print",
+                "price" => 650000,
+                "stock" => 6,
+            ],
+            [
+                "name" => "Brother MFC-J4335DW",
+                "spec" => "This printer can print",
                 "price" => 650000,
                 "stock" => 6,
             ],

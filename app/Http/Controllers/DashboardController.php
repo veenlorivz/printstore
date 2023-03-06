@@ -16,13 +16,14 @@ class DashboardController extends Controller
     }
 
     public function orders(){
-        $approved_orders = Order::with('user')->where('is_approved', true)->get();
-        $waited_orders = Order::with('user')->where('is_approved', false)->get();
-        return view("dashboard.orders.index", compact(['approved_orders', 'waited_orders']));
+        $approved_orders = Order::with('user')->where('status', "approved")->latest()->get();
+        $waited_orders = Order::with('user')->where('status', 'waited')->latest()->get();
+        $rejected_orders = Order::with('user')->where('status', 'rejected')->latest()->get();
+        return view("dashboard.orders.index", compact(['approved_orders', 'waited_orders', 'rejected_orders']));
     }
 
     public function customers(){
-        $orders = Order::with(['product', 'user'])->get();
-        return view("dashboard.customers.index", compact('orders'));
+        $customers = User::with(['order', 'order.product'])->where("role", "!=", "admin")->get();
+        return view("dashboard.customers.index", compact(['customers']));
     }
 }

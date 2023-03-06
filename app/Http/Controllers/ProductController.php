@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -25,7 +26,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view("dashboard.products.create");
     }
 
     /**
@@ -36,41 +37,75 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $product = $request->validate([
+            "name" => "required|string|max:255",
+            "spec" => "required|string",
+            "spec" => "required|string",
+            "price" => "required|integer",
+            "stock" => "required|integer",
+            "image" => "image|nullable",
+        ]);
+
+        if($request->file("image")){
+            $product['image'] = $request->file('image')->store("product_pic", 'public');
+        }
+
+        Product::create($product);
+
+        return redirect("/dashboard/products");
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        //
+        $product = Product::find($id);
+        return view("dashboard.products.show", compact('product'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
-        //
+        return view("dashboard.products.edit", [
+            "product" => Product::find($id)
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+        $new_product = $request->validate([
+            "name" => "required|string|max:255",
+            "spec" => "required|string",
+            "spec" => "required|string",
+            "price" => "required|integer",
+            "stock" => "required|integer",
+            "image" => "image|nullable",
+        ]);
+
+        if($request->file('image')){
+            if($product->image){
+                Storage::disk("public")->delete($product->image);
+            }
+            $new_product['image'] = $request->file('image')->store("product_pic", 'public');
+        }
+
+        $product->update($new_product);
+
+        return redirect()->route("dashboard.products");
     }
 
     /**

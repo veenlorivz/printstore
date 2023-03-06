@@ -18,7 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
-            $table->boolean('is_approved')->default(false);
+            $table->bigInteger('total');
+            $table->enum('status', ['approved', 'rejected', 'waited'])->default('waited');
             $table->timestamps();
         });
     }

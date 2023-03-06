@@ -19,17 +19,20 @@ class OrderSeeder extends Seeder
             [
                 "user_id" => 2,
                 "product_id" => 1,
-                "quantity" => 1
+                "quantity" => 1,
+                "total" => 500000,
             ],
             [
                 "user_id" => 3,
                 "product_id" => 3,
-                "quantity" => 2
+                "quantity" => 2,
+                "total" => 650000 * 2,
             ],
             [
                 "user_id" => 2,
                 "product_id" => 2,
-                "quantity" => 1
+                "quantity" => 1,
+                "total" => 400000,
             ],
         ];
 
